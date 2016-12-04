@@ -1,0 +1,34 @@
+dist: trusty
+sudo: required
+language: php
+
+cache:
+  directories:
+    - $HOME/.composer/cache
+
+php:
+  - 5.5
+  - 5.6
+  - 7.0
+  - nightly
+  - hhvm
+
+matrix:
+  allow_failures:
+    - php: nightly
+    - php: hhvm
+  fast_finish: true
+
+notifications:
+  on_success: never
+  on_failure: always
+
+git:
+  depth: 1
+
+install:
+  - travis_retry composer install --prefer-dist --no-interaction
+
+script:
+  - ./vendor/bin/phpunit
+  - ./vendor/bin/phpcs --standard=phpcs.xml -snp --encoding=utf-8 src/  examples/ --report-width=150

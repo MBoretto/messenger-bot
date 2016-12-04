@@ -1,0 +1,155 @@
+<?php
+
+namespace MBoretto\MessengerBot\Objects;
+
+use Illuminate\Support\Collection;
+use MBoretto\MessengerBot\Objects\HasRelations;
+
+/**
+ * Class BaseObject.
+ */
+class BaseObject extends Collection implements HasRelations
+{
+    /**
+     * Builds collection entity.
+     *
+     * @param array|mixed $data
+     */
+    public function __construct($data = [])
+    {
+        parent::__construct($this->getRawResult($data));
+
+        $this->mapRelatives();
+    }
+
+    /**
+     * Property relations.
+     *
+     * @return array
+     */
+    public function relations()
+    {
+        return [];
+    }
+
+    /**
+     * Get an item from the collection by key.
+     *
+     * @param mixed $key
+     * @param mixed $default
+     *
+     * @return mixed|static
+     */
+    public function get($key, $default = null)
+    {
+        if ($this->offsetExists($key)) {
+            return is_array($this->items[$key]) ? new static($this->items[$key]) : $this->items[$key];
+        }
+
+        return value($default);
+    }
+
+    /**
+     * Map property relatives to appropriate objects.
+     *
+     * @return array|void
+     */
+    public function mapRelatives()
+    {
+        $relations = collect($this->relations());
+
+        if ($relations->isEmpty()) {
+            return false;
+        }
+
+        return $this->items = collect($this->all())
+            ->map(function ($value, $key) use ($relations) {
+
+                if ($relations->has($key)) {
+                    $className = $relations->get($key);
+                    //Creates a new collection for eache element of the associative array
+                    if (!$this->isAssoc($value)) {
+                        $result = [];
+                        foreach ($value as $element) {
+                            //echo 'creating: ' . $className . "\n";
+                            $result[] = new $className($element);
+                        }
+                        return $result;
+                    }
+                    return new $className($value);
+                }
+
+                return $value;
+            })
+            ->all();
+    }
+
+    /**
+     * Returns raw response.
+     *
+     * @return array|mixed
+     */
+    public function getRawResponse()
+    {
+        return $this->items;
+    }
+
+    /**
+     * Returns raw result.
+     *
+     * @param $data
+     *
+     * @return mixed
+     */
+    public function getRawResult($data)
+    {
+        return array_get($data, 'result', $data);
+    }
+
+    /**
+     * Magic method to get/set properties dynamically.
+     *
+     * @param $name
+     * @param $arguments
+     *
+     * @return mixed
+     */
+    public function __call($name, $arguments)
+    {
+        $action = substr($name, 0, 3);
+
+        if ($action === 'get') {
+            $property = snake_case(substr($name, 3));
+            $response = $this->get($property);
+
+            // Map relative property to an object
+            $relations = $this->relations();
+            if (null != $response && isset($relations[$property])) {
+                return new $relations[$property]($response);
+            }
+
+            return $response;
+        } elseif ($action === 'set') {
+            $property = snake_case(substr($name, 3));
+            $this->items[$property] = $arguments[0];
+            return $this;
+        }
+
+        return false;
+    }
+
+    /**
+     * Return true if the array is associative.
+     *
+     * @param $arr
+     *
+     * @return bool
+     */
+    private function isAssoc(array $arr)
+    {
+        if (array() === $arr) {
+            return false;
+        }
+        return array_keys($arr) !== range(0, count($arr) - 1);
+    }
+}

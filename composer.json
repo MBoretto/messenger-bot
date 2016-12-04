@@ -1,0 +1,41 @@
+{
+    "name": "mboretto/messenger-bot",
+    "type": "library",
+    "description": "PHP Messanger bot",
+    "keywords": ["Facebook", "Messenger", "bot", "api"],
+    "license": "MIT",
+    "homepage": "https://github.com/mboretto/messenger-bot",
+    "support": {
+        "issues": "https://github.com/mboretto/messenger-bot/issues",
+        "source": "https://github.com/mboretto/messenger-bot"
+    },
+    "authors": [
+        {
+            "name": "Marco Boretto",
+            "email": "marco.bore@gmail.com",
+            "role": "Developer"
+        }
+    ],
+    "require": {
+        "php": ">=5.5.0",
+        "ext-curl": "*",
+        "illuminate/support": "~5.0",
+        "monolog/monolog": "^1.19",
+        "guzzlehttp/guzzle": "~6.0"
+    },
+    "autoload": {
+        "psr-4": {
+            "MBoretto\\MessengerBot\\": "src/",
+            "Examples\\": "examples/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "MBoretto\\MessengerBot\\Tests\\Unit\\": "tests/unit"
+        }
+    },
+    "require-dev": {
+        "phpunit/phpunit": "~4.8",
+        "squizlabs/php_codesniffer": "~2.5"
+    }
+}
