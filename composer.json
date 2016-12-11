@@ -21,7 +21,8 @@
         "ext-curl": "*",
         "illuminate/support": "~5.0",
         "monolog/monolog": "^1.19",
-        "guzzlehttp/guzzle": "~6.0"
+        "guzzlehttp/guzzle": "~6.0",
+        "symfony/http-foundation": "^3.2"
     },
     "autoload": {
         "psr-4": {

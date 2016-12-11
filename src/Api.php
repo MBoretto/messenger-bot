@@ -8,6 +8,7 @@ use MBoretto\MessengerBot\Commands\CommandBus;
 use MBoretto\MessengerBot\Exception\MessengerException;
 use MBoretto\MessengerBot\Objects\Update;
 use GuzzleHttp\Client;
+use Symfony\Component\HttpFoundation\Request;
 
 class Api
 {
@@ -52,6 +53,13 @@ class Api
      * @var null|Client
      */
     protected $client = null;
+
+    /**
+     * Request
+     *
+     * @var null|Request
+     */
+    protected $request = null;
 
     /**
      * Messenger constructor.
@@ -100,47 +108,67 @@ class Api
         return $this->command_bus;
     }
 
-    /**
-     * Handle bot request from webhook
+    /*
+     * Handle request to set up the webhook
+     *
+     * @param Request $request http request
      *
      * @return bool
      *
      * @throws MessengerException;
      */
-    public function handle()
+    public function handleSetWebhook()
     {
-        if (isset(Security::getRequestData('hub_mode', 'get'))) {
-            $hub_challenge = isset(Security::getRequestData('hub_challenge', 'get')) ? Security::getRequestData('hub_challenge', 'get') : null;
-            if (Security::getRequestData('hub_mode', 'get') == 'subscribe' && $hub_challenge !== null) {
-                if (Security::getRequestData('hub_verify_token', 'get') == $this->verify_token) {
-                    echo $hub_challenge;
-                    $this->commandBus()->handleAllInitCommands();
-                } else {
-                    echo "error verify token didn't match ";
-                }
+        $hub_challenge = $this->request->has('hub_challenge') ? $this->request->query->get('hub_challenge') : null;
+        if ($this->request->query->get('hub_mode') == 'subscribe' && $hub_challenge !== null) {
+            if ($this->request->query->get('hub_verify_token') == $this->verify_token) {
+                echo $hub_challenge;
+                $this->commandBus()->handleAllInitCommands();
+            } else {
+                echo "error verify token didn't match ";
             }
-        } else {
-            $payload = file_get_contents("php://input");
-    //$payload = '{"object":"page","entry":[{"id":"496739423863385","time":1476003165397,"messaging":[{"sender":{"id":"1193858294006371"},"recipient":{"id":"496739423863385"},"timestamp":1476003165287,"message":{"mid":"mid.1476003165262:d3950718524f063685","seq":815,"text":"Let's Go"}}]}]}';
-
-            //Get startwd
-            $payload = '{"object":"page","entry":[{"id":"496739423863385","time":1476738772815,"messaging":[{"recipient":{"id":"496739423863385"},"timestamp":1476738772815,"sender":{"id":"1193858294006371"},"postback":{"payload":"my_payload"}}]}]}';
-
-            //Update coming from a post back button
-            $payload = '{"object":"page","entry":[{"id":"496739423863385","time":1476652519480,"messaging":[{"recipient":{"id":"496739423863385"},"timestamp":1476652519480,"sender":{"id":"1193858294006371"},"postback":{"payload":"start"}}]}]}';
-
-            //Update coming from a plain text
-            $payload = '{"object":"page","entry":[{"id":"496739423863385","time":1475364618006,"messaging":[{"sender":{"id":"1193858294006371"},"recipient":{"id":"496739423863385"},"timestamp":1475364617920,"message":{"mid":"mid.1475364617907:fb4766a132180f3257","seq":73,"text":"Ggg"}}]}]}';
-
-            $update = new Update(json_decode($payload, true));
-            foreach ($update->getEntry() as $entry) {
-                foreach ($entry->getMessaging() as $messaging) {
-                    //$this->commandBus()->handleAllInitCommands();
-                    $this->commandBus()->handler($messaging);
-                }
-            }
-            file_put_contents('../request.log', $payload . "\n", FILE_APPEND);
         }
+    }
+
+    /*
+     * Handle Facebook Request
+     *
+     * @param Request $request http request
+     *
+     * @return bool
+     *
+     * @throws MessengerException;
+     */
+    public function handleRequest()
+    {
+        $payload = file_get_contents("php://input");
+
+        $update = new Update(json_decode($payload, true));
+        foreach ($update->getEntry() as $entry) {
+            foreach ($entry->getMessaging() as $messaging) {
+                //$this->commandBus()->handleAllInitCommands();
+                $this->commandBus()->handler($messaging);
+            }
+        }
+        file_put_contents('../request.log', $payload . "\n", FILE_APPEND);
+    }
+
+    /**
+     * Handle bot request from webhook
+     *
+     * @param Request $request http request
+     *
+     * @return bool
+     *
+     * @throws MessengerException;
+     */
+    public function handle(Request $request)
+    {
+        $this->setRequest($request);
+        if ($request->has('hub_mode')) {
+            return $this-handleSetWebhook();
+        }
+        return $this-handleRequest();
     }
 
     /**
@@ -212,5 +240,18 @@ class Api
     public function getToken()
     {
         return $this->token;
+    }
+
+    /**
+     * Set the http request
+     *
+     * @param Request $request http request
+     *
+     * @return Api
+     */
+    public function setRequest(Request $request)
+    {
+        $this->request = $request;
+        return $this;
     }
 }
