@@ -141,16 +141,29 @@ class Api
      */
     public function handleRequest()
     {
-        $payload = file_get_contents("php://input");
+        $payload = $this->request->getContent();
+//
+//        //Get startwd
+//        $payload = '{"object":"page","entry":[{"id":"496739423863385","time":1476738772815,"messaging":[{"recipient":{"id":"496739423863385"},"timestamp":1476738772815,"sender":{"id":"1193858294006371"},"postback":{"payload":"my_payload"}}]}]}';
+//
+//        //Update coming from a post back button
+//        $payload = '{"object":"page","entry":[{"id":"496739423863385","time":1476652519480,"messaging":[{"recipient":{"id":"496739423863385"},"timestamp":1476652519480,"sender":{"id":"1193858294006371"},"postback":{"payload":"start"}}]}]}';
+//        //Update coming from a plain text
+//        $payload = '{"object":"page","entry":[{"id":"496739423863385","time":1475364618006,"messaging":[{"sender":{"id":"1193858294006371"},"recipient":{"id":"496739423863385"},"timestamp":1475364617920,"message":{"mid":"mid.1475364617907:fb4766a132180f3257","seq":73,"text":"Ggg"}}]}]}';
 
-        $update = new Update(json_decode($payload, true));
-        foreach ($update->getEntry() as $entry) {
-            foreach ($entry->getMessaging() as $messaging) {
-                //$this->commandBus()->handleAllInitCommands();
-                $this->commandBus()->handler($messaging);
+
+
+
+        //if (!empty($payload)) {
+            $update = new Update(json_decode($payload, true));
+            foreach ($update->getEntry() as $entry) {
+                foreach ($entry->getMessaging() as $messaging) {
+                    //$this->commandBus()->handleAllInitCommands();
+                    $this->commandBus()->handler($messaging);
+                }
             }
-        }
-        file_put_contents('../request.log', $payload . "\n", FILE_APPEND);
+            file_put_contents('/data/grocerylist/storage/logs/request.log', $payload . "\n", FILE_APPEND);
+        //}
     }
 
     /**
@@ -200,7 +213,7 @@ class Api
      */
     protected function send($action, $json_payload)
     {
-        echo $json_payload;
+        //echo $json_payload;
         $client = $this->getClient();
         return $client->post(
             'https://graph.facebook.com/v2.6/me/' . $action . '?access_token=' . $this->token,
