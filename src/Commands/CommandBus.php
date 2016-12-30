@@ -209,4 +209,12 @@ class CommandBus
         }
         return $this;
     }
+
+   /**
+     * @retunr Api
+     */
+    public function getMessenger()
+    {
+        return $this->messenger;
+    }
 }

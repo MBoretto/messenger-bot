@@ -16,7 +16,7 @@ class Api
      * Version
      * @var string
      */
-    protected $version = '0.0.4';
+    protected $version = '0.0.5';
 
     /**
      * Messenger Bot Token
@@ -125,6 +125,7 @@ class Api
     public function handleRequest()
     {
         $payload = $this->request->getContent();
+
         $update = new Update(json_decode($payload, true));
         foreach ($update->getEntry() as $entry) {
             foreach ($entry->getMessaging() as $messaging) {
@@ -150,8 +151,9 @@ class Api
 
     /**
      * Send message.
+     * @throws MessengerResponseException;
+     * @todo
      * @return bool
-     * @throws MessengerException;
      */
     public function sendMessage($data)
     {
@@ -160,6 +162,8 @@ class Api
 
     /**
      * Send thread settings.
+     * @throws MessengerResponseException;
+     * @todo
      * @return bool
      */
     public function sendThreadSetting($data)
@@ -168,41 +172,48 @@ class Api
     }
 
     /**
-     * send request.
+     * Send request.
+     * @throws MessengerResponseException;
      * @todo
      * @return bool
      */
     protected function send($action, $json_payload)
     {
-        //echo $json_payload;
-        $client = $this->getClient();
-        return $client->post(
-            'https://graph.facebook.com/v2.6/me/' . $action . '?access_token=' . $this->token,
-            [
-                'headers' => ['Content-Type' => 'application/json'],
-                'body' => $json_payload,
-                //'debug' => true
-            ]
-        );
+        try {
+            return $this->getClient()->post(
+                'https://graph.facebook.com/v2.6/me/' . $action . '?access_token=' . $this->token,
+                [
+                    'headers' => ['Content-Type' => 'application/json'],
+                    'body' => $json_payload,
+                    //'debug' => true
+                ]
+            );
+        } catch (GuzzleHttp\Exception\ClientException $e) {
+            throw new MessengerResponseException($e);
+        }
     }
 
     /**
      * Get user info.
-     * @return bool
+     * @throws MessengerResponseException;
+     * @return string
      */
-    protected function get($user_id, $fields = ['first_name', 'last_name', 'profile_pic', 'locale', 'timezone', 'gender'])
+    public function getUser($user_id, $fields = ['first_name', 'last_name', 'profile_pic', 'locale', 'timezone', 'gender'])
     {
-        $client = $this->getClient();
-        $response = $client->get(
-            'https://graph.facebook.com/v2.6/' . $user_id,
-            ['query' => [
-                'fields' => implode(',', $fields),
-                'access_token' => $this->token
+        try {
+            $response = $this->getClient()->get(
+                'https://graph.facebook.com/v2.6/' . $user_id,
+                ['query' => [
+                    'fields' => implode(',', $fields),
+                    'access_token' => $this->token
+                    ]
                 ]
-            ]
-        );
+            );
 
-        return $response->getBody()->getContents();
+            return $response->getBody()->getContents();
+        } catch (GuzzleHttp\Exception\ClientException $e) {
+            throw new MessengerResponseException($e);
+        }
     }
 
     /**

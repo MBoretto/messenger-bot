@@ -4,8 +4,8 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "382e43120d5180dac9849b899fb654c3",
-    "content-hash": "b055da06bd26eebaef4ae9a1522090cf",
+    "hash": "bf324f0eea58060e8a2323888839b15d",
+    "content-hash": "ffe1bd7078bd8b59e656a6b4e3ffe6e2",
     "packages": [
         {
             "name": "doctrine/inflector",
@@ -569,16 +569,16 @@
         },
         {
             "name": "symfony/http-foundation",
-            "version": "v3.2.1",
+            "version": "v3.1.8",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/http-foundation.git",
-                "reference": "9963bc29d7f4398b137dd8efc480efe54fdbe5f1"
+                "reference": "88a1d3cee2dbd06f7103ff63938743b903b65a92"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/http-foundation/zipball/9963bc29d7f4398b137dd8efc480efe54fdbe5f1",
-                "reference": "9963bc29d7f4398b137dd8efc480efe54fdbe5f1",
+                "url": "https://api.github.com/repos/symfony/http-foundation/zipball/88a1d3cee2dbd06f7103ff63938743b903b65a92",
+                "reference": "88a1d3cee2dbd06f7103ff63938743b903b65a92",
                 "shasum": ""
             },
             "require": {
@@ -591,7 +591,7 @@
             "type": "library",
             "extra": {
                 "branch-alias": {
-                    "dev-master": "3.2-dev"
+                    "dev-master": "3.1-dev"
                 }
             },
             "autoload": {
@@ -618,7 +618,7 @@
             ],
             "description": "Symfony HttpFoundation Component",
             "homepage": "https://symfony.com",
-            "time": "2016-11-27 04:21:38"
+            "time": "2016-11-27 04:21:07"
         },
         {
             "name": "symfony/polyfill-mbstring",

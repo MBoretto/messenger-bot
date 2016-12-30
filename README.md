@@ -14,7 +14,7 @@ Strongly inspired to [irazasyed/telegram-bot-sdk](https://github.com/irazasyed/t
 
 4. Point the webhook to your https domain.
 ## Features
-GenericTemplate, ButtonTemplate, ThreadSettings, Buttons and Commands...  
+GenericTemplate, ButtonTemplate, ThreadSettings, Buttons, fetching user info and Commands...  
 ## Commads
 Commads needs to be registered in hook.php and must me istance of Commmand.php.
 - When a Postback update is received, the CommandBus check if payload match the name of a postback command. If this occours the command is executed otherwise the GenericPostbackCommand.php will handle it.
