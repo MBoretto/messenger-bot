@@ -6,5 +6,4 @@ namespace MBoretto\MessengerBot\Exception;
  */
 class MessengerException extends \Exception
 {
-
 }

@@ -4,7 +4,6 @@ namespace MBoretto\MessengerBot\ThreadSettings;
 
 /**
  * Class Greeting.
- *
  * @todo
  * @method string      getId()        Sender user ID
  */

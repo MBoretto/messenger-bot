@@ -6,8 +6,6 @@ use MBoretto\MessengerBot\Objects\HasRelations;
 
 /**
  * Class Entry.
- *
- *
  * @method string               getId()                     Page ID of page
  * @method int                  getTime()                   Time of update (epoch time in milliseconds)
  * @method Messaging[]          getMessaging()              Array containing objects related to messaging

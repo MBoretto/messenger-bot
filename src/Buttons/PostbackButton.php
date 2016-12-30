@@ -4,7 +4,6 @@ namespace MBoretto\MessengerBot\Buttons;
 
 /**
  * Class PostbackButton.
- *
  * @todo
  * @method string      getId()        Sender user ID
  */

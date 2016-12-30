@@ -20,8 +20,21 @@ abstract class Command
     protected $description;
 
     /**
+     * @var CommandBus Parent commandbus.
+     */
+    protected $commamd_bus;
+
+    /**
+     * Constructor
+     * @param CommandBus
+     */
+    public function __construct(CommandBus $command_bus)
+    {
+        $this->command_bus = $command_bus;
+    }
+
+    /**
      * Get Command Name.
-     *
      * @return string
      */
     public function getName()
@@ -31,9 +44,7 @@ abstract class Command
 
     /**
      * Set Command Name.
-     *
      * @param $name
-     *
      * @return Command
      */
     public function setName($name)
@@ -44,7 +55,6 @@ abstract class Command
 
     /**
      * Get Command Description.
-     *
      * @return string
      */
     public function getDescription()
@@ -54,9 +64,7 @@ abstract class Command
 
     /**
      * Set Command Description.
-     *
      * @param $description
-     *
      * @return Command
      */
     public function setDescription($description)
@@ -66,10 +74,26 @@ abstract class Command
     }
 
     /**
+     * Get Command Bus.
+     * @return CommandBus
+     */
+    public function getCommandBus()
+    {
+        return $this->command_bus;
+    }
+
+    /**
+     * Get messenger instance
+     * @return MBoretto\MessengerBot\Api;
+     */
+    public function getMessenger()
+    {
+        return $this->command_bus->getMessenger();
+    }
+
+    /**
      * Here's is implemented the logic of the command
-     *
-     * @param Api $messenger
      * @param Messaging $update
      */
-    abstract public function handle(Api $messenger, Messaging $messaging = null);
+    abstract public function handle(Messaging $messaging = null);
 }

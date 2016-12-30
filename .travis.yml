@@ -30,5 +30,4 @@ install:
   - travis_retry composer install --prefer-dist --no-interaction
 
 script:
-  - ./vendor/bin/phpunit
   - ./vendor/bin/phpcs --standard=phpcs.xml -snp --encoding=utf-8 src/  examples/ --report-width=150

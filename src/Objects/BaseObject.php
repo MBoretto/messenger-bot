@@ -12,19 +12,16 @@ class BaseObject extends Collection implements HasRelations
 {
     /**
      * Builds collection entity.
-     *
      * @param array|mixed $data
      */
     public function __construct($data = [])
     {
         parent::__construct($this->getRawResult($data));
-
         $this->mapRelatives();
     }
 
     /**
      * Property relations.
-     *
      * @return array
      */
     public function relations()
@@ -34,10 +31,8 @@ class BaseObject extends Collection implements HasRelations
 
     /**
      * Get an item from the collection by key.
-     *
      * @param mixed $key
      * @param mixed $default
-     *
      * @return mixed|static
      */
     public function get($key, $default = null)
@@ -51,7 +46,6 @@ class BaseObject extends Collection implements HasRelations
 
     /**
      * Map property relatives to appropriate objects.
-     *
      * @return array|void
      */
     public function mapRelatives()
@@ -86,7 +80,6 @@ class BaseObject extends Collection implements HasRelations
 
     /**
      * Returns raw response.
-     *
      * @return array|mixed
      */
     public function getRawResponse()
@@ -96,9 +89,7 @@ class BaseObject extends Collection implements HasRelations
 
     /**
      * Returns raw result.
-     *
      * @param $data
-     *
      * @return mixed
      */
     public function getRawResult($data)
@@ -108,10 +99,8 @@ class BaseObject extends Collection implements HasRelations
 
     /**
      * Magic method to get/set properties dynamically.
-     *
      * @param $name
      * @param $arguments
-     *
      * @return mixed
      */
     public function __call($name, $arguments)
@@ -140,9 +129,7 @@ class BaseObject extends Collection implements HasRelations
 
     /**
      * Return true if the array is associative.
-     *
      * @param $arr
-     *
      * @return bool
      */
     private function isAssoc(array $arr)

@@ -4,7 +4,6 @@ namespace MBoretto\MessengerBot\ThreadSettings;
 
 /**
  * Class PersistentMenu.
- *
  * @todo
  * @method string      getId()        Sender user ID
  */
@@ -19,7 +18,7 @@ class PersistentMenu extends BaseThreadSetting
         $this->items['thread_state'] = 'existing_thread';
         return $this;
     }
-    
+
     /**
      * @todo
      */

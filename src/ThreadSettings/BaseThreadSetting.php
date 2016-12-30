@@ -11,22 +11,18 @@ abstract class BaseThreadSetting extends Collection
 {
     /**
      * Builds collection entity.
-     *
      * @param array|mixed $data
      */
     public function __construct($data = [])
     {
         parent::__construct($data);
-
         $this->setType();
     }
 
     /**
      * Magic method to get/set properties dynamically.
-     *
      * @param $name
      * @param $arguments
-     *
      * @return mixed
      */
     public function __call($name, $arguments)
@@ -44,7 +40,6 @@ abstract class BaseThreadSetting extends Collection
 
     /**
      * Set button type.
-     *
      * @return array
      */
     abstract protected function setType();

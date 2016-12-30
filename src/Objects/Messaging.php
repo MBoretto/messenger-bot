@@ -6,8 +6,6 @@ use MBoretto\MessengerBot\Objects\HasRelations;
 
 /**
  * Class Messaging.
- *
- *
  * @method Sender             getSender()        Sender user ID
  * @method Receiver           getReceiver()      Receiver user ID
  * @method int                getTimestamp()     (Optional).
@@ -36,7 +34,6 @@ class Messaging extends BaseObject
 
     /**
      * Detect type based on properties.
-     *
      * @return string|null
      */
     public function detectType()

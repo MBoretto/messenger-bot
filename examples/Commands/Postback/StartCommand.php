@@ -2,7 +2,6 @@
 
 namespace Examples\Commands\Postback;
 
-use MBoretto\MessengerBot\Api;
 use MBoretto\MessengerBot\Objects\Messaging;
 use MBoretto\MessengerBot\Objects\Message;
 use MBoretto\MessengerBot\Objects\Recipient;
@@ -26,7 +25,7 @@ class StartCommand extends Command
     /**
      * @inheritdoc
      */
-    public function handle(Api $messenger, Messaging $messaging = null)
+    public function handle(Messaging $messaging = null)
     {
         $sender_id = $messaging->getSender()->getId();
         //@todo get user information

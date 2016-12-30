@@ -4,7 +4,6 @@ namespace MBoretto\MessengerBot\Templates;
 
 /**
  * Class GenericTemplate.
- *
  * @todo
  * @method string      getId()        Sender user ID
  */

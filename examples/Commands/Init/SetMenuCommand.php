@@ -3,7 +3,6 @@
 namespace Examples\Commands\Init;
 
 use MBoretto\MessengerBot\Commands\Command;
-use MBoretto\MessengerBot\Api;
 use MBoretto\MessengerBot\Objects\Messaging;
 use MBoretto\MessengerBot\Buttons\PostbackButton;
 use MBoretto\MessengerBot\ThreadSettings\PersistentMenu;
@@ -23,13 +22,13 @@ class SetMenuCommand extends Command
     /**
      * @inheritdoc
      */
-    public function handle(Api $messenger, Messaging $messaging = null)
+    public function handle(Messaging $messaging = null)
     {
         //set Persistent Menu
         $buttons = [];
         $buttons[] = new PostbackButton(['title' => 'show', 'payload' => 'custom_payload']);
         $data = new PersistentMenu();
         $data->setCallToActions($buttons);
-        $messenger->sendThreadSetting($data->toJson());
+        $this->getMessenger()->sendThreadSetting($data->toJson());
     }
 }

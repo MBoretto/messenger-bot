@@ -3,7 +3,6 @@
 namespace Examples\Commands\Init;
 
 use MBoretto\MessengerBot\Commands\Command;
-use MBoretto\MessengerBot\Api;
 use MBoretto\MessengerBot\Objects\Messaging;
 use MBoretto\MessengerBot\ThreadSettings\GetStarted;
 
@@ -22,7 +21,7 @@ class SetGetStartedCommand extends Command
     /**
      * @inheritdoc
      */
-    public function handle(Api $messenger, Messaging $messaging = null)
+    public function handle(Messaging $messaging = null)
     {
         //set GetStarted button
         $data = new GetStarted();
@@ -39,6 +38,6 @@ class SetGetStartedCommand extends Command
                 //'debug' => true
             ]
         );
-        //$messenger->sendThreadSetting($data->toJson());
+        //$this->getMessenger()->sendThreadSetting($data->toJson());
     }
 }

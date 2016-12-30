@@ -22,7 +22,7 @@
         "illuminate/support": "~5.0",
         "monolog/monolog": "^1.19",
         "guzzlehttp/guzzle": "~6.0",
-        "symfony/http-foundation": "3.0.*"
+        "symfony/http-foundation": "3.*"
     },
     "autoload": {
         "psr-4": {

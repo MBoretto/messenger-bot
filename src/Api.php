@@ -14,59 +14,50 @@ class Api
 {
     /**
      * Version
-     *
      * @var string
      */
-    protected $version = '0.0.1';
+    protected $version = '0.0.4';
 
     /**
      * Messenger Bot Token
-     *
      * @var string
      */
     protected $token = '';
 
     /**
      * Messenger Bot Verify Token
-     *
      * @var string
      */
     protected $verify_token = '';
 
     /**
      * Messenger Bot name
-     *
      * @var string
      */
     protected $bot_name = '';
 
     /**
      * Command bus
-     *
      * @var null|CommandBus
      */
     protected $command_bus = null;
 
     /**
      * Guzzle Cliet
-     *
      * @var null|Client
      */
     protected $client = null;
 
     /**
      * Request
-     *
      * @var null|Request
      */
     protected $request = null;
 
     /**
      * Messenger constructor.
-     *
      * @param string $api_key
      * @param string $verify_token
-     *
      * @throws MessengerException;
      */
     public function __construct($token, $verify_token)
@@ -85,7 +76,6 @@ class Api
 
     /**
      * Create/Return the Guzzle client
-     *
      * @return Client
      */
     protected function getClient()
@@ -98,7 +88,6 @@ class Api
 
     /**
      * Return CommandBus.
-     *
      * @return CommandBus
      * @todo
      * @throws MessengerException;
@@ -110,11 +99,8 @@ class Api
 
     /*
      * Handle request to set up the webhook
-     *
      * @param Request $request http request
-     *
      * @return bool
-     *
      * @throws MessengerException;
      */
     public function handleSetWebhook()
@@ -132,63 +118,39 @@ class Api
 
     /*
      * Handle Facebook Request
-     *
      * @param Request $request http request
-     *
      * @return bool
-     *
      * @throws MessengerException;
      */
     public function handleRequest()
     {
         $payload = $this->request->getContent();
-//
-//        //Get startwd
-//        $payload = '{"object":"page","entry":[{"id":"496739423863385","time":1476738772815,"messaging":[{"recipient":{"id":"496739423863385"},"timestamp":1476738772815,"sender":{"id":"1193858294006371"},"postback":{"payload":"my_payload"}}]}]}';
-//
-//        //Update coming from a post back button
-//        $payload = '{"object":"page","entry":[{"id":"496739423863385","time":1476652519480,"messaging":[{"recipient":{"id":"496739423863385"},"timestamp":1476652519480,"sender":{"id":"1193858294006371"},"postback":{"payload":"start"}}]}]}';
-//        //Update coming from a plain text
-//        $payload = '{"object":"page","entry":[{"id":"496739423863385","time":1475364618006,"messaging":[{"sender":{"id":"1193858294006371"},"recipient":{"id":"496739423863385"},"timestamp":1475364617920,"message":{"mid":"mid.1475364617907:fb4766a132180f3257","seq":73,"text":"Ggg"}}]}]}';
-
-
-
-
-        //if (!empty($payload)) {
-            $update = new Update(json_decode($payload, true));
-            foreach ($update->getEntry() as $entry) {
-                foreach ($entry->getMessaging() as $messaging) {
-                    //$this->commandBus()->handleAllInitCommands();
-                    $this->commandBus()->handler($messaging);
-                }
+        $update = new Update(json_decode($payload, true));
+        foreach ($update->getEntry() as $entry) {
+            foreach ($entry->getMessaging() as $messaging) {
+                $this->commandBus()->handler($messaging);
             }
-            file_put_contents('/data/grocerylist/storage/logs/request.log', $payload . "\n", FILE_APPEND);
-        //}
+        }
     }
 
     /**
      * Handle bot request from webhook
-     *
      * @param Request $request http request
-     *
      * @return bool
-     *
      * @throws MessengerException;
      */
     public function handle(Request $request)
     {
         $this->setRequest($request);
         if ($request->has('hub_mode')) {
-            return $this-handleSetWebhook();
+            return $this->handleSetWebhook();
         }
-        return $this-handleRequest();
+        return $this->handleRequest();
     }
 
     /**
      * Send message.
-     *
      * @return bool
-     *
      * @throws MessengerException;
      */
     public function sendMessage($data)
@@ -198,7 +160,6 @@ class Api
 
     /**
      * Send thread settings.
-     *
      * @return bool
      */
     public function sendThreadSetting($data)
@@ -226,8 +187,7 @@ class Api
     }
 
     /**
-     * get user info.
-     *
+     * Get user info.
      * @return bool
      */
     protected function get($user_id, $fields = ['first_name', 'last_name', 'profile_pic', 'locale', 'timezone', 'gender'])
@@ -247,7 +207,6 @@ class Api
 
     /**
      * Return the messenger token.
-     *
      * @return string
      */
     public function getToken()
@@ -257,9 +216,7 @@ class Api
 
     /**
      * Set the http request
-     *
      * @param Request $request http request
-     *
      * @return Api
      */
     public function setRequest(Request $request)

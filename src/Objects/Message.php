@@ -6,8 +6,6 @@ use MBoretto\MessengerBot\Objects\HasRelations;
 
 /**
  * Class Message.
- *
- *
  * @method string           getMid()                    Message ID
  * @method number           getSeq()                    Message sequence number
  * @method string           getText()                   Text of message
@@ -26,7 +24,6 @@ class Message extends BaseObject implements HasRelations
 
     /**
      * (Optional). For text messages, the actual UTF-8 text of the message.
-     *
      * @return string
      */
     public function getText()
@@ -36,7 +33,6 @@ class Message extends BaseObject implements HasRelations
 
     /**
      * Detect type based on properties.
-     *
      * @return string|null
      */
     public function detectType()

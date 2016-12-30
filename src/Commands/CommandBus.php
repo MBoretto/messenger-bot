@@ -43,9 +43,7 @@ class CommandBus
 
    /**
      * Add a list of commands that  will be executed when the webhook will be setted.
-     *
      * @param array $commands
-     *
      * @return CommandBus
      */
     public function addInitCommands(array $commands)
@@ -56,9 +54,7 @@ class CommandBus
 
    /**
      * Add a list of commands.
-     *
      * @param array $commands
-     *
      * @return CommandBus
      */
     public function addWebhookCommands(array $commands)
@@ -71,9 +67,7 @@ class CommandBus
 
    /**
      * Add a list of commands.
-     *
      * @param array $commands
-     *
      * @return CommandBus
      */
     public function addPostbackCommands(array $commands)
@@ -86,9 +80,7 @@ class CommandBus
 
     /**
      * Add a command to the commands list.
-     *
      * @param CommandInterface|string $command Either an object or full path to the command class.
-     *
      * @return CommandBus
      */
     public function addWebhookCommand($command)
@@ -98,9 +90,7 @@ class CommandBus
 
     /**
      * Add a command to the commands list.
-     *
      * @param CommandInterface|string $command Either an object or full path to the command class.
-     *
      * @return CommandBus
      */
     public function addPostbackCommand($command)
@@ -110,10 +100,8 @@ class CommandBus
 
     /**
      * Add a command to the commands list.
-     *
      * @todo
      * @param CommandInterface|string $command Either an object or full path to the command class.
-     *
      * @return CommandBus
      */
     protected function addCommand($command, &$command_level)
@@ -125,11 +113,8 @@ class CommandBus
 
     /**
      * Create the object Command
-     *
      * @param CommandInterface|string $command Either an object or full path to the command class.
-     *
      * @throws MessengerException;
-     *
      * @return ObjectCommand
      */
     protected function createObject($command)
@@ -143,7 +128,7 @@ class CommandBus
                     )
                 );
             }
-            $command = new $command();
+            $command = new $command($this);
             if ($command instanceof Command) {
                 return $command;
             }
@@ -164,11 +149,9 @@ class CommandBus
 
     /**
      * Handles Inbound Messages and Executes Appropriate Command.
-     *
      * @param Messaging $update
      *@todo
      * @throws TelegramSDKException
-     *
      * @return Update
      */
     public function handler(Messaging $messaging)
@@ -176,7 +159,7 @@ class CommandBus
         if ($messaging->detectType() == 'postback') {
             $name = $messaging->getPostback()->getPayload();
             if (array_key_exists($name, $this->postback_commands)) {
-                return $this->postback_commands[$name]->handle($this->messenger, $messaging);
+                return $this->postback_commands[$name]->handle($messaging);
             }
         }
         //   Kind of messages
@@ -199,11 +182,10 @@ class CommandBus
         //message_echoes Subscribes to Message Echo Callback
         //messaging_checkout_updates (BETA) Subscribes to Checkout Update Callback
         //messaging_payments (BETA) Subscribes to Payment Callback
-        
         //echo 'Executing: ' . ucfirst(camel_case($messaging->detectType()));
         $name = $messaging->detectType();
         if (array_key_exists($name, $this->webhook_commands)) {
-            return $this->webhook_commands[$name]->handle($this->messenger, $messaging);
+            return $this->webhook_commands[$name]->handle($messaging);
         }
         throw new MessengerException(
             sprintf(
@@ -217,15 +199,13 @@ class CommandBus
 
    /**
      * Add a list of commands that  will be executed when the webhook will be setted.
-     *
      * @param array $commands
-     *
      * @return CommandBus
      */
     public function handleAllInitCommands()
     {
         foreach ($this->init_commands as $command) {
-            $this->createObject($command)->handle($this->messenger);
+            $this->createObject($command)->handle();
         }
         return $this;
     }

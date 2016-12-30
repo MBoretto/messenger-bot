@@ -2,7 +2,6 @@
 
 namespace Examples\Commands;
 
-use MBoretto\MessengerBot\Api;
 use MBoretto\MessengerBot\Objects\Messaging;
 use MBoretto\MessengerBot\Objects\Message;
 use MBoretto\MessengerBot\Objects\Recipient;
@@ -23,7 +22,7 @@ class GenericPostbackCommand extends Command
     /**
      * @inheritdoc
      */
-    public function handle(Api $messenger, Messaging $messaging = null)
+    public function handle(Messaging $messaging = null)
     {
         $sender_id = $messaging->getSender()->getId();
         $message = $messaging->getMessage();
@@ -33,6 +32,6 @@ class GenericPostbackCommand extends Command
         $data = new Messaging();
         $data->setRecipient(new Recipient(['id' => $sender_id]));
         $data->setMessage(new Message(['text' => 'Handling a generic postback command!']));
-        $messenger->sendMessage($data->toJson());
+        $this->getMessenger()->sendMessage($data->toJson());
     }
 }

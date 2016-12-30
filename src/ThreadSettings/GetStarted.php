@@ -4,7 +4,6 @@ namespace MBoretto\MessengerBot\ThreadSettings;
 
 /**
  * Class GetStarted.
- *
  * @todo
  * @method string      getId()        Sender user ID
  */
@@ -19,7 +18,7 @@ class GetStarted extends BaseThreadSetting
         $this->items['thread_state'] = 'new_thread';
         return $this;
     }
-    
+
     /**
      * @todo
      */
