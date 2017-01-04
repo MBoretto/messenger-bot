@@ -31,17 +31,17 @@ class StartCommand extends Command
         //@todo get user information
 
         //Button Template example
-        $data = new Messaging();
-        $data->setRecipient(new Recipient(['id' => $sender_id]));
+        $messaging = new Messaging();
+        $messaging->setRecipient(new Recipient(['id' => $sender_id]));
         $button_template = new ButtonTemplate();
-        $button_template->setText('Hi! How can i help you?');
+        $button_template->setText('Hi! How can I help you?');
         $buttons = [];
         $buttons[] = new UrlButton(['url' => 'www.github.com', 'title' => 'github']);
         $buttons[] = new PostbackButton(['title' => 'payload_button', 'payload' => 'tell_me_more']);
         $button_template->setButtons($buttons);
         $message = new Message();
         $message->setAttachment($button_template);
-        $data->setMessage($message);
-        $this->sendMessage($data->toJson());
+        $messaging->setMessage($message);
+        return $this->sendMessage($messaging);
     }
 }

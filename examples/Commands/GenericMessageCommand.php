@@ -33,14 +33,14 @@ class GenericMessageCommand extends Command
         $text = $message->getText();
 
         //Plain message
-        $data = new Messaging();
-        $data->setRecipient(new Recipient(['id' => $sender_id]));
-        $data->setMessage(new Message(['text' => "Here's what i can do:"]));
-        $this->getMessenger()->sendMessage($data->toJson());
+        $messaging = new Messaging();
+        $messaging->setRecipient(new Recipient(['id' => $sender_id]));
+        $messaging->setMessage(new Message(['text' => "Here's what I can do:"]));
+        $this->getMessenger()->sendMessage($messaging);
 
         //carousel example
-        $data = new Messaging();
-        $data->setRecipient(new Recipient(['id' => $sender_id]));
+        $messaging = new Messaging();
+        $messaging->setRecipient(new Recipient(['id' => $sender_id]));
 
         $element = new BaseObject;
         $element->setTitle('Carousel example');
@@ -59,7 +59,7 @@ class GenericMessageCommand extends Command
         $message = new Message();
         $message->setAttachment($generic_template);
 
-        $data->setMessage($message);
-        $this->getMessenger()->sendMessage($data->toJson());
+        $messaging->setMessage($message);
+        return $this->getMessenger()->sendMessage($messaging);
     }
 }

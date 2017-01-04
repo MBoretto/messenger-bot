@@ -7,6 +7,7 @@ define('BASE_PATH', __DIR__);
 use MBoretto\MessengerBot\Commands\CommandBus;
 use MBoretto\MessengerBot\Exception\MessengerException;
 use MBoretto\MessengerBot\Objects\Update;
+use MBoretto\MessengerBot\Objects\Messaging;
 use GuzzleHttp\Client;
 use Symfony\Component\HttpFoundation\Request;
 
@@ -125,7 +126,6 @@ class Api
     public function handleRequest()
     {
         $payload = $this->request->getContent();
-
         $update = new Update(json_decode($payload, true));
         foreach ($update->getEntry() as $entry) {
             foreach ($entry->getMessaging() as $messaging) {
@@ -155,9 +155,27 @@ class Api
      * @todo
      * @return bool
      */
-    public function sendMessage($data)
+    public function sendMessage(Messaging $messaging)
     {
-        return $this->send('messages', $data);
+        //For plain messages
+        if (!is_null($messaging->getMessage())) {
+            $message = $messaging->getMessage();
+            $text = $message->getText();
+            if (!is_null($text)) {
+                $string_len_utf8 = mb_strlen($text, 'UTF-8');
+                //Check if I exeed the maximum size if was i split the message
+                if ($string_len_utf8 > 640) {
+                    $message->setText(mb_substr($text, 0, 640));
+                    $messaging->setMessage($message);
+                    $this->send('messages', $messaging);
+
+                    $message->setText(mb_substr($text, 640, $string_len_utf8));
+                    $messaging->setMessage($message);
+                    return $this->sendMessage($messaging);
+                }
+            }
+        }
+        return $this->send('messages', $messaging);
     }
 
     /**
