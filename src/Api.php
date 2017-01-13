@@ -20,6 +20,12 @@ class Api
     protected $version = '0.0.5';
 
     /**
+     * Messenger graph path
+     * @var string
+     */
+    protected $graph_path = 'https://graph.facebook.com/v2.8';
+
+    /**
      * Messenger Bot Token
      * @var string
      */
@@ -199,7 +205,7 @@ class Api
     {
         try {
             return $this->getClient()->post(
-                'https://graph.facebook.com/v2.6/me/' . $action . '?access_token=' . $this->token,
+                $this->graph_path . '/me/' . $action . '?access_token=' . $this->token,
                 [
                     'headers' => ['Content-Type' => 'application/json'],
                     'body' => $json_payload,
@@ -220,7 +226,7 @@ class Api
     {
         try {
             $response = $this->getClient()->get(
-                'https://graph.facebook.com/v2.6/' . $user_id,
+                $this->graph_path . '/' . $user_id,
                 ['query' => [
                     'fields' => implode(',', $fields),
                     'access_token' => $this->token

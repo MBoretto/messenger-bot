@@ -60,6 +60,7 @@ class GenericMessageCommand extends Command
         $message->setAttachment($generic_template);
 
         $messaging->setMessage($message);
-        return $this->getMessenger()->sendMessage($messaging);
+        $this->getMessenger()->sendMessage($messaging);
+        return $messaging;
     }
 }

@@ -30,6 +30,13 @@ try {
         Examples\Commands\GenericMessageCommand::class,
     ]);
 
+    //Inernal messagingn middleware
+    //function in handle will be executed before or after each incoming messaging object
+    $messenger_bot->commandBus()->addMiddlewares([
+         \MBoretto\MessengerBot\Middleware\BeforeGetUser::class,
+         \MBoretto\MessengerBot\Middleware\AfterStoreMessaging::class,
+    ]);
+
     $request = Request::createFromGlobals();
     $messenger_bot->handle($request);
 } catch (MBoretto\MessengerBot\Exception\MessengerException $e) {

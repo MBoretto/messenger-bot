@@ -32,6 +32,7 @@ class GenericPostbackCommand extends Command
         $messaging = new Messaging();
         $messaging->setRecipient(new Recipient(['id' => $sender_id]));
         $messaging->setMessage(new Message(['text' => 'Handling a generic postback command!']));
-        return $this->getMessenger()->sendMessage($messaging);
+        $this->getMessenger()->sendMessage($messaging);
+        return $messaging;
     }
 }

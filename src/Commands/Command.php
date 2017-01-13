@@ -83,17 +83,19 @@ abstract class Command
     }
 
     /**
-     * Get messenger instance
+     * Get messenger Api instance
      * @return MBoretto\MessengerBot\Api;
      */
     public function getMessenger()
     {
-        return $this->command_bus->getMessenger();
+        return $this->command_bus->getApi();
     }
 
     /**
      * Here's is implemented the logic of the command
-     * @param Messaging $update
+     * All command need to return the messaggin entities
+     * @param Messaging $messaging
+     * @return Messaging $messaging
      */
     abstract public function handle(Messaging $messaging = null);
 }

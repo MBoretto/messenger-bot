@@ -5,6 +5,7 @@ namespace MBoretto\MessengerBot\Commands;
 use MBoretto\MessengerBot\Api;
 use MBoretto\MessengerBot\Objects\Messaging;
 use MBoretto\MessengerBot\Exception\MessengerException;
+use \Closure;
 
 /**
  * Class CommandBus.
@@ -14,7 +15,7 @@ class CommandBus
    /**
      * @var Api
      */
-    protected $messenger;
+    protected $api;
 
     /**
      * @var init_command[] Holds all init commands.
@@ -22,7 +23,7 @@ class CommandBus
     protected $init_commands = [];
 
     /**
-     * @var postback_command[] Holds all postback commands.
+     * @var webhook_command[] Holds all webhook commands.
      */
     protected $webhook_commands = [];
 
@@ -32,13 +33,18 @@ class CommandBus
     protected $postback_commands = [];
 
     /**
+     * @var middleware[] Contain the middlewawre that haveto executed before and after each messaging
+     */
+    protected $middleware = [];
+
+    /**
      * Instantiate Command Bus.
      *
-     * @param MessengerBot $messenger
+     * @param MessengerBot $api
      */
-    public function __construct(Api $messenger)
+    public function __construct(Api $api)
     {
-        $this->messenger = $messenger;
+        $this->api = $api;
     }
 
    /**
@@ -148,57 +154,94 @@ class CommandBus
     }
 
     /**
+     * Add the middleware thath need to be executed before and after each messaging
+     * @param array $middleware
+     * @return CommandBus
+     */
+    public function addMiddlewares(array $middlewares)
+    {
+        foreach ($middlewares as $middleware) {
+            $this->middleware[] = new $middleware($this->api);
+        }
+        return $this;
+    }
+
+    /**
      * Handles Inbound Messages and Executes Appropriate Command.
      * @param Messaging $update
-     *@todo
-     * @throws TelegramSDKException
+     * @todo
      * @return Update
      */
     public function handler(Messaging $messaging)
     {
-        if ($messaging->detectType() == 'postback') {
-            $name = $messaging->getPostback()->getPayload();
-            if (array_key_exists($name, $this->postback_commands)) {
-                return $this->postback_commands[$name]->handle($messaging);
-            }
-        }
-        //   Kind of messages
-        // Each field maps to a callback.
-        //message
-        //postback
-        //optin
-        //account_linking
-        //delivery
-        //read
-        //checkout_update
-        //payment
+        $callback = array_reduce($this->middleware, function ($next_layer, $layer) {
+                return $this->createLayer($next_layer, $layer);
+        }, $this->core());
+        return $callback($messaging);
+    }
 
-        //webhook updates
-        //message Subscribes to Message Received Callback
-        //messaging_postbacks Subscribes to Postback Received Callback
-        //messaging_optins Subscribes to Authentication Callback via the Send-to-Messenger Plugin
-        //message_deliveries Subscribes to Message Delivered Callback
-        //message_reads Subscribes to Message Read Callback
-        //message_echoes Subscribes to Message Echo Callback
-        //messaging_checkout_updates (BETA) Subscribes to Checkout Update Callback
-        //messaging_payments (BETA) Subscribes to Payment Callback
-        //echo 'Executing: ' . ucfirst(camel_case($messaging->detectType()));
-        $name = $messaging->detectType();
-        if (array_key_exists($name, $this->webhook_commands)) {
-            return $this->webhook_commands[$name]->handle($messaging);
-        }
-        throw new MessengerException(
-            sprintf(
-                'Update not handled type: "%s" raw json: "%s"',
-                $name,
-                $messaging->toJson()
-            )
-        );
-        //return $messaging;
+    public function createLayer(Closure $next_layer, $layer)
+    {
+        return function (Messaging $messaging) use ($next_layer, $layer) {
+            return $layer->handle($messaging, $next_layer);
+        };
     }
 
    /**
-     * Add a list of commands that  will be executed when the webhook will be setted.
+     * Redirect the message to the corrext commands
+     * If is a postback first it try to march the command name with the postback one
+     * If no match is found the generic postback command is executed
+     * If is a plain message the generic message commnas is executed
+     * @return Closure
+     * @TODO
+     */
+    public function core()
+    {
+        return function (Messaging $messaging) {
+            if ($messaging->detectType() == 'postback') {
+                $name = $messaging->getPostback()->getPayload();
+                if (array_key_exists($name, $this->postback_commands)) {
+                    return $this->postback_commands[$name]->handle($messaging);
+                }
+            }
+            //   Kind of messages
+            // Each field maps to a callback.
+            //message
+            //postback
+            //optin
+            //account_linking
+            //delivery
+            //read
+            //checkout_update
+            //payment
+
+            //webhook updates
+            //message Subscribes to Message Received Callback
+            //messaging_postbacks Subscribes to Postback Received Callback
+            //messaging_optins Subscribes to Authentication Callback via the Send-to-Messenger Plugin
+            //message_deliveries Subscribes to Message Delivered Callback
+            //message_reads Subscribes to Message Read Callback
+            //message_echoes Subscribes to Message Echo Callback
+            //messaging_checkout_updates (BETA) Subscribes to Checkout Update Callback
+            //messaging_payments (BETA) Subscribes to Payment Callback
+            //echo 'Executing: ' . ucfirst(camel_case($messaging->detectType()));
+            $name = $messaging->detectType();
+            if (array_key_exists($name, $this->webhook_commands)) {
+                return $this->webhook_commands[$name]->handle($messaging);
+            }
+            throw new MessengerException(
+                sprintf(
+                    'Update not handled type: "%s" raw json: "%s"',
+                    $name,
+                    $messaging->toJson()
+                )
+            );
+            return $messaging;
+        };
+    }
+
+   /**
+     * List of commands that  will be executed when the webhook will be setted.
      * @param array $commands
      * @return CommandBus
      */
@@ -213,8 +256,8 @@ class CommandBus
    /**
      * @retunr Api
      */
-    public function getMessenger()
+    public function getApi()
     {
-        return $this->messenger;
+        return $this->api;
     }
 }
