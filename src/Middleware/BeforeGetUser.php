@@ -15,7 +15,7 @@ class BeforeGetUser extends Layer
         } catch (MBoretto\MessengerBot\Exception\MessengerResponseException $e) {
             return;
         }
-        $messaging->setSender($user_info);
+        $messaging->setUserInfo($user_info);
         return $next($messaging);
     }
 }

@@ -13,12 +13,14 @@ Strongly inspired to [irazasyed/telegram-bot-sdk](https://github.com/irazasyed/t
 3. Edit the [hook.php]((https://github.com/mbroretto/messenger-bot/examples/hook.example.php) file with your Facebook credential.
 
 4. Point the webhook to your https domain.
+
 ## Features
 - GenericTemplate, ButtonTemplate, ThreadSettings, Buttons, fetching user info and Commands...  
 - Automatic message splitting if characters exceed the limit  
+
 ### Middleware
 Sometimes you need to execute some routines for each incoming messaging object. 
-In order to da this you can exploit the middleware layer. Middleware instances need to implement the _Middleware\Layer_ Class.
+In order to do this you can exploit the middleware layer. Middleware instances need to implement the _Middleware\Layer_ Class.
 Middleware can be before the core function: 
 
 ```
@@ -55,9 +57,10 @@ class BeforeGetUser extends Layer
     }
 }
 ```
-
+Then add the middleware in your hook file as explained in the examples.  
 Middleware is inspired to Lumen/Laravel Pipeline.
-## Commads
+
+## Commands
 Commads needs to be registered in hook.php and must me istance of Commmand.php.
 - When a Postback update is received, the CommandBus check if payload match the name of a postback command. If this occours the command is executed otherwise the GenericPostbackCommand.php will handle it.
 - A simple text message is handled by GenericMessageCommand.php

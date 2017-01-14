@@ -47,7 +47,7 @@ class GenericMessageCommand extends Command
         $element->setSubtitle('Carousel example');
 
         $buttons = [];
-        $buttons[] = new PostbackButton(['title' => 'button template', 'payload' => 'start']);
+        $buttons[] = new PostbackButton(['title' => 'Button template', 'payload' => 'start']);
         $buttons[] = new ShareButton();
 
         $element->setButtons($buttons);

@@ -11,7 +11,6 @@ class AfterStoreMessaging extends Layer
     {
         $response = $next($messaging);
         //Do stuff
-        echo 'Store request!!!';
         return $response;
     }
 }

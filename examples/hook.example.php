@@ -1,7 +1,7 @@
 <?php
 
 // Load composer
-require __DIR__ . '/vendor/autoload.php';
+require __DIR__ . '../vendor/autoload.php';
 
 // Add you bot's token and verify_token
 $TOKEN = 'your_bot_token';
@@ -15,22 +15,21 @@ try {
     $messenger_bot = new MBoretto\MessengerBot\Api($TOKEN, $VERIFY_TOKEN);
 
     $messenger_bot->commandBus()->addInitCommands([
-        Examples\Commands\Init\SetMenuCommand::class,
-        Examples\Commands\Init\SetGreetingCommand::class,
-        Examples\Commands\Init\SetGetStartedCommand::class,
+        \Examples\Commands\Init\SetMenuCommand::class,
+        \Examples\Commands\Init\SetGreetingCommand::class,
+        \Examples\Commands\Init\SetGetStartedCommand::class,
     ]);
 
     $messenger_bot->commandBus()->addPostbackCommands([
-        Examples\Commands\Postback\StartCommand::class,
-        MBoretto\MessengerBot\Commands\StartCommand::class,
+        \Examples\Commands\Postback\StartCommand::class,
     ]);
 
     $messenger_bot->commandBus()->addWebhookCommands([
-        Examples\Commands\GenericPostbackCommand::class,
-        Examples\Commands\GenericMessageCommand::class,
+        \Examples\Commands\GenericPostbackCommand::class,
+        \Examples\Commands\GenericMessageCommand::class,
     ]);
 
-    //Inernal messagingn middleware
+    //Internal messaging middleware
     //function in handle will be executed before or after each incoming messaging object
     $messenger_bot->commandBus()->addMiddlewares([
          \MBoretto\MessengerBot\Middleware\BeforeGetUser::class,
@@ -38,6 +37,11 @@ try {
     ]);
 
     $request = Request::createFromGlobals();
+
+    //Store Request
+    //$payload = $request->getContent();
+    //file_put_contents('request.log', $payload, FILE_APPEND);
+
     $messenger_bot->handle($request);
 } catch (MBoretto\MessengerBot\Exception\MessengerException $e) {
     // Silence is golden!

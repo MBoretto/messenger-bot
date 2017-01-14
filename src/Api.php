@@ -17,7 +17,7 @@ class Api
      * Version
      * @var string
      */
-    protected $version = '0.0.5';
+    protected $version = '0.0.6';
 
     /**
      * Messenger graph path
@@ -132,6 +132,7 @@ class Api
     public function handleRequest()
     {
         $payload = $this->request->getContent();
+
         $update = new Update(json_decode($payload, true));
         foreach ($update->getEntry() as $entry) {
             foreach ($entry->getMessaging() as $messaging) {
@@ -149,7 +150,7 @@ class Api
     public function handle(Request $request)
     {
         $this->setRequest($request);
-        if ($request->has('hub_mode')) {
+        if (isset($request->hub_mode)) {
             return $this->handleSetWebhook();
         }
         return $this->handleRequest();

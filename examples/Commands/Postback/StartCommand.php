@@ -36,12 +36,13 @@ class StartCommand extends Command
         $button_template = new ButtonTemplate();
         $button_template->setText('Hi! How can I help you?');
         $buttons = [];
-        $buttons[] = new UrlButton(['url' => 'www.github.com', 'title' => 'github']);
-        $buttons[] = new PostbackButton(['title' => 'payload_button', 'payload' => 'tell_me_more']);
+        $buttons[] = new UrlButton(['url' => 'https://github.com/MBoretto/messenger-bot', 'title' => 'Github Project Link']);
+        $buttons[] = new PostbackButton(['title' => 'Payload button', 'payload' => 'tell_me_more']);
         $button_template->setButtons($buttons);
         $message = new Message();
         $message->setAttachment($button_template);
         $messaging->setMessage($message);
-        return $this->sendMessage($messaging);
+        $this->getMessenger()->sendMessage($messaging);
+        return $messaging;
     }
 }
