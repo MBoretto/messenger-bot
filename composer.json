@@ -1,10 +1,4 @@
 {
-"config": {
-    "platform": {
-        "php": "5.5.9"
-    }
-},
-
     "name": "mboretto/messenger-bot",
     "type": "library",
     "description": "PHP Messanger bot",
