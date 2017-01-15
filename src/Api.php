@@ -106,21 +106,25 @@ class Api
 
     /*
      * Handle request to set up the webhook
-     * @param Request $request http request
-     * @return bool
+     * @return string
      * @throws MessengerException;
      */
     public function handleSetWebhook()
     {
-        $hub_challenge = $this->request->has('hub_challenge') ? $this->request->query->get('hub_challenge') : null;
+        $hub_challenge = $this->request->query->get('hub_challenge');
         if ($this->request->query->get('hub_mode') == 'subscribe' && $hub_challenge !== null) {
             if ($this->request->query->get('hub_verify_token') == $this->verify_token) {
                 echo $hub_challenge;
+                sleep(1);
                 $this->commandBus()->handleAllInitCommands();
+                return;
             } else {
                 echo "error verify token didn't match ";
+                return;
             }
         }
+        echo "error hub_challenge is null ";
+        return;
     }
 
     /*
@@ -150,7 +154,7 @@ class Api
     public function handle(Request $request)
     {
         $this->setRequest($request);
-        if (isset($request->hub_mode)) {
+        if (!is_null($request->query->get('hub_mode'))) {
             return $this->handleSetWebhook();
         }
         return $this->handleRequest();

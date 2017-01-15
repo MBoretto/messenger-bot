@@ -26,7 +26,8 @@ class SetMenuCommand extends Command
     {
         //set Persistent Menu
         $buttons = [];
-        $buttons[] = new PostbackButton(['title' => 'show', 'payload' => 'custom_payload']);
+        $buttons[] = new PostbackButton(['title' => 'Start', 'payload' => 'start']);
+        //$buttons[] = new PostbackButton(['title' => 'Test', 'payload' => 'start']);
         $data = new PersistentMenu();
         $data->setCallToActions($buttons);
         $this->getMessenger()->sendThreadSetting($data->toJson());

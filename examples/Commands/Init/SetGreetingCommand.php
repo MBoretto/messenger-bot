@@ -1,6 +1,6 @@
 <?php
 
-namespace Examples\Commandsi\Init;
+namespace Examples\Commands\Init;
 
 use MBoretto\MessengerBot\Commands\Command;
 use MBoretto\MessengerBot\Objects\Messaging;
@@ -26,6 +26,6 @@ class SetGreetingCommand extends Command
         //set Greeting
         $data = new Greeting();
         $data->setText("Welcome there!");
-        $this->gerMessenger()->sendThreadSetting($data->toJson());
+        $this->getMessenger()->sendThreadSetting($data->toJson());
     }
 }
