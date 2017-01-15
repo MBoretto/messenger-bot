@@ -17,7 +17,7 @@ class Api
      * Version
      * @var string
      */
-    protected $version = '0.0.6';
+    protected $version = '0.1.0';
 
     /**
      * Messenger graph path
