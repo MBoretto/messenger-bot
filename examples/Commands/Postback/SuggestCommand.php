@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Messenger\Commands\Postback;
+namespace Examples\Commands\Postback;
 
 use MBoretto\MessengerBot\Objects\Messaging;
 use MBoretto\MessengerBot\Objects\Message;
@@ -9,8 +9,9 @@ use MBoretto\MessengerBot\Objects\BaseObject;
 use MBoretto\MessengerBot\Templates\GenericTemplate;
 use MBoretto\MessengerBot\QuickReply\TextQuickReply;
 use MBoretto\MessengerBot\QuickReply\LocationQuickReply;
+use MBoretto\MessengerBot\Commands\Command;
 
-class SettingsCommand extends Command
+class SuggestCommand extends Command
 {
     /**
      * @var string Command Name must correspond to the postback payload
