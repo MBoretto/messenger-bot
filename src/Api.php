@@ -87,7 +87,7 @@ class Api
      */
     protected function getClient()
     {
-        if (is_null($this->client)) {
+        if ($this->client === null) {
             return new Client();
         }
         return $this->client;
@@ -138,8 +138,8 @@ class Api
         $payload = $this->request->getContent();
 
         $update = new Update(json_decode($payload, true));
-        foreach ($update->getEntry() as $entry) {
-            foreach ($entry->getMessaging() as $messaging) {
+        foreach ($update->getEntry() as &$entry) {
+            foreach ($entry->getMessaging() as &$messaging) {
                 $this->commandBus()->handler($messaging);
             }
         }
@@ -154,7 +154,7 @@ class Api
     public function handle(Request $request)
     {
         $this->setRequest($request);
-        if (!is_null($request->query->get('hub_mode'))) {
+        if ($request->query->get('hub_mode') !== null) {
             return $this->handleSetWebhook();
         }
         return $this->handleRequest();
@@ -169,10 +169,10 @@ class Api
     public function sendMessage(Messaging $messaging)
     {
         //For plain messages
-        if (!is_null($messaging->getMessage())) {
+        if ($messaging->getMessage() !== null) {
             $message = $messaging->getMessage();
             $text = $message->getText();
-            if (!is_null($text)) {
+            if ($text !== null) {
                 $string_len_utf8 = mb_strlen($text, 'UTF-8');
                 //Check if I exeed the maximum size if was i split the message
                 if ($string_len_utf8 > 640) {

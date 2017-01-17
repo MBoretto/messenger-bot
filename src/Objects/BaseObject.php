@@ -64,7 +64,7 @@ class BaseObject extends Collection implements HasRelations
                     //Creates a new collection for eache element of the associative array
                     if (!$this->isAssoc($value)) {
                         $result = [];
-                        foreach ($value as $element) {
+                        foreach ($value as &$element) {
                             //echo 'creating: ' . $className . "\n";
                             $result[] = new $className($element);
                         }

@@ -22,6 +22,7 @@ try {
 
     $messenger_bot->commandBus()->addPostbackCommands([
         \Examples\Commands\Postback\StartCommand::class,
+        \Examples\Commands\Postback\SuggestCommand::class,
     ]);
 
     $messenger_bot->commandBus()->addWebhookCommands([

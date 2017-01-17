@@ -48,6 +48,7 @@ class GenericMessageCommand extends Command
 
         $buttons = [];
         $buttons[] = new PostbackButton(['title' => 'Button template', 'payload' => 'start']);
+        $buttons[] = new PostbackButton(['title' => 'QuickReply', 'payload' => 'quickreply']);
         $buttons[] = new ShareButton();
 
         $element->setButtons($buttons);

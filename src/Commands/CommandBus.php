@@ -65,7 +65,7 @@ class CommandBus
      */
     public function addWebhookCommands(array $commands)
     {
-        foreach ($commands as $command) {
+        foreach ($commands as &$command) {
             $this->addWebhookCommand($command);
         }
         return $this;
@@ -78,7 +78,7 @@ class CommandBus
      */
     public function addPostbackCommands(array $commands)
     {
-        foreach ($commands as $command) {
+        foreach ($commands as &$command) {
             $this->addPostbackCommand($command);
         }
         return $this;
@@ -160,7 +160,7 @@ class CommandBus
      */
     public function addMiddlewares(array $middlewares)
     {
-        foreach ($middlewares as $middleware) {
+        foreach ($middlewares as &$middleware) {
             $this->middleware[] = new $middleware($this->api);
         }
         return $this;
@@ -247,7 +247,7 @@ class CommandBus
      */
     public function handleAllInitCommands()
     {
-        foreach ($this->init_commands as $command) {
+        foreach ($this->init_commands as &$command) {
             $this->createObject($command)->handle();
         }
         return $this;
