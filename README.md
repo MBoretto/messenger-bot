@@ -15,7 +15,7 @@ Strongly inspired to [irazasyed/telegram-bot-sdk](https://github.com/irazasyed/t
 4. Point the webhook to your https domain.
 
 ## Features
-- GenericTemplate, ButtonTemplate, ThreadSettings, Buttons, fetching user info and Commands...  
+- GenericTemplate, ButtonTemplate, ThreadSettings, Buttons, QuickReply, fetching user info and Commands...  
 - Automatic message splitting if characters exceed the limit  
 
 ### Middleware
